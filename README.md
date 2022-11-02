@@ -26,7 +26,7 @@ This tool is not supported by Denon/InMusic; Please read the disclaimer at the b
 
 ## Usage
 
-1. Download the tool (https://github.com/lfuelling/engineSync/releases/latest)
+1. Download the tool ([Latest Release](https://github.com/lfuelling/engineSync/releases/latest))
 2. Organize your Music using engineDJ (which runs good enough for that purpose on macOS Ventura)
 3. (OPTIONAL) Organize your light show using SoundSwitch (also still running on Ventura)
 4. Close engineDJ, let it create a **Library Backup** (this is important)
