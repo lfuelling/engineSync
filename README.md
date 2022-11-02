@@ -15,7 +15,6 @@ This tool is not supported by Denon/InMusic; Please read the disclaimer at the b
 - Syncs a SoundSwitch project to the target drive
 - Fixes DB entries for track paths according to what's been synced
 - Works on macOS Ventura (and probably every OS golang runs on)
-- No dependency to CGO (using the modernc sqlite driver)
 
 ### What it can't do
 
@@ -27,8 +26,8 @@ This tool is not supported by Denon/InMusic; Please read the disclaimer at the b
 
 ## Usage
 
-1. Download the tool (TODO: add link)
-2. Organize your Music using engineDJ (which still runs good enough for that purpose on macOS Ventura)
+1. Download the tool (https://github.com/lfuelling/engineSync/releases/latest)
+2. Organize your Music using engineDJ (which runs good enough for that purpose on macOS Ventura)
 3. (OPTIONAL) Organize your light show using SoundSwitch (also still running on Ventura)
 4. Close engineDJ, let it create a **Library Backup** (this is important)
 5. Attach your drive, make sure it's formatted to EXFAT or FAT!
@@ -54,7 +53,6 @@ This tool is not supported by Denon/InMusic; Please read the disclaimer at the b
    - `go build engineSync`
 4. Run:
    - `./engineSync`
-
 
 ## Disclaimer
 
