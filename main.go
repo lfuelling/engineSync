@@ -20,6 +20,7 @@ import (
 	"strings"
 )
 
+var engineLibraryDir string
 var engineDbFiles []string
 var soundSwitchProject string
 var targetDevicePath string
@@ -51,7 +52,7 @@ func setLoading(loading bool) {
 		loader.Hide()
 		setStatus("Ready!", color.RGBA{R: 255, G: 255, B: 255, A: 255})
 
-		if !(engineDbFiles != nil && !(len(engineDbFiles) <= 0)) {
+		if !(engineDbFiles != nil && !(len(engineDbFiles) <= 0) || len(engineLibraryDir) <= 0) {
 			libraryButton.Enable()
 		} else {
 			if len(soundSwitchProject) <= 0 && !strings.HasSuffix(soundSwitchProject, ".ssproj") {
@@ -66,39 +67,43 @@ func setLoading(loading bool) {
 	}
 }
 
-func handleTrack(rows *sql.Rows, db *sql.DB) error {
+func handleTrack(rows *sql.Rows) (Track, error) {
 	track := Track{}
 	err2 := rows.Scan(&track.Id, &track.Path, &track.Filename)
 	if err2 != nil {
-		return err2
+		return Track{}, err2
 	}
 
 	// copy track to target Music folder
-	splitTrackPath := strings.Split(track.Path, "#")[0]
+	splitTrackPathSegmentsFull := strings.Split(track.Path, "#")
+	var splitTrackPath string
+	if len(splitTrackPathSegmentsFull) > 2 {
+		splitTrackPath = strings.Join(splitTrackPathSegmentsFull[:len(splitTrackPathSegmentsFull)-1], "#")
+	} else {
+		splitTrackPath = strings.Join(splitTrackPathSegmentsFull, "#")
+	}
 	splitTrackPathSegments := strings.Split(splitTrackPath, string(filepath.Separator))
 	setStatus(fmt.Sprintf("Syncing track %v...", splitTrackPathSegments[len(splitTrackPathSegments)-1]), color.RGBA{R: 255, G: 255, B: 255, A: 255})
 
 	targetPath := fmt.Sprintf("%v%vEngine Library%vMusic", targetDevicePath, string(filepath.Separator), string(filepath.Separator))
 	err3 := os.MkdirAll(targetPath, os.ModePerm)
 	if err3 != nil {
-		return err3
+		return Track{}, err3
 	}
-	trackPath, err4 := filepath.Abs(splitTrackPath)
+
+	trackPath, err4 := filepath.Abs(fmt.Sprintf("%v%v%v", engineLibraryDir, string(filepath.Separator), splitTrackPath))
 	if err4 != nil {
-		return err4
+		return Track{}, err4
 	}
 
 	_, err5 := CopyTrack(trackPath, targetPath)
 	if err5 != nil {
-		return err5
+		return Track{}, err5
 	}
-	split := strings.Split(track.Path, string(filepath.Separator)) //FIXME: the path seems to contain "garbage"
+	split := strings.Split(track.Path, string(filepath.Separator))
 	newPath := fmt.Sprintf("Music%v%v", string(filepath.Separator), split[len(split)-1])
-	_, err6 := db.Exec("UPDATE Track SET path = ? WHERE id = ?;", newPath, track.Id)
-	if err6 != nil {
-		return err6
-	}
-	return nil
+	track.Path = newPath
+	return track, nil
 }
 
 func main() {
@@ -152,45 +157,81 @@ func main() {
 
 				// read tracks from database (from target)
 				dbName := splitPath[len(splitPath)-1]
-				setStatus(fmt.Sprintf("Reading tracks of %v...", dbName), color.RGBA{R: 255, G: 255, B: 255, A: 255})
-				db, err := sql.Open("sqlite", fmt.Sprintf("file:%v%v%v", targetPath, string(filepath.Separator), dbName))
-				if err != nil {
-					fdia.NewError(err, w).Show()
-					setLoading(false)
-					return
-				}
+				if dbName == "m.db" {
+					setStatus(fmt.Sprintf("Reading tracks of %v...", dbName), color.RGBA{R: 255, G: 255, B: 255, A: 255})
+					db, err := sql.Open("sqlite", fmt.Sprintf("file:%v%v%v", targetPath, string(filepath.Separator), dbName))
+					if err != nil {
+						fdia.NewError(err, w).Show()
+						setLoading(false)
+						return
+					}
 
-				rows, err1 := db.Query("SELECT id, path, filename FROM Track;")
-				if err1 != nil {
-					fdia.NewError(err1, w).Show()
-					setLoading(false)
-					return
-				}
+					rows, err1 := db.Query("SELECT id, path, filename FROM Track;")
+					if err1 != nil {
+						fdia.NewError(err1, w).Show()
+						setLoading(false)
+						return
+					}
 
-				for rows.Next() {
-					err2 := handleTrack(rows, db)
-					if err2 != nil {
-						fdia.NewError(err2, w).Show()
+					var updatedTracks []Track
+
+					for rows.Next() {
+						track, err2 := handleTrack(rows)
+						if err2 != nil {
+							fdia.NewError(err2, w).Show()
+							setLoading(false)
+							return
+						}
+						updatedTracks = append(updatedTracks, track)
+					}
+
+					err3 := rows.Close()
+					if err3 != nil {
+						fdia.NewError(err3, w).Show()
+						setLoading(false)
+						return
+					}
+
+					begin, err7 := db.Begin()
+					if err7 != nil {
+						fdia.NewError(err7, w).Show()
+						setLoading(false)
+						return
+					}
+					for _, updatedTrack := range updatedTracks {
+						splitUpdatedPath := strings.Split(updatedTrack.Path, string(filepath.Separator))
+						setStatus(fmt.Sprintf("Updating track %v...", splitUpdatedPath[len(splitUpdatedPath)-1]), color.RGBA{R: 255, G: 255, B: 255, A: 255})
+						_, err6 := begin.Exec("UPDATE OR REPLACE Track SET path = ? WHERE id = ?;", updatedTrack.Path, updatedTrack.Id)
+						if err6 != nil {
+							fdia.NewError(err6, w).Show()
+							setLoading(false)
+							err8 := begin.Rollback()
+							if err8 != nil {
+								fdia.NewError(err8, w).Show()
+								return
+							}
+							return
+						}
+					}
+					err8 := begin.Commit()
+					if err8 != nil {
+						fdia.NewError(err8, w).Show()
+						setLoading(false)
+						return
+					}
+
+					err4 := db.Close()
+					if err4 != nil {
+						fdia.NewError(err4, w).Show()
 						setLoading(false)
 						return
 					}
 				}
-
-				err3 := rows.Close()
-				if err3 != nil {
-					fdia.NewError(err3, w).Show()
-					setLoading(false)
-					return
-				}
-
-				err4 := db.Close()
-				if err4 != nil {
-					fdia.NewError(err4, w).Show()
-					setLoading(false)
-					return
-				}
 			}
 		}
+		// all done
+		setLoading(false)
+		setStatus("Finished!", color.RGBA{R: 0, G: 255, B: 0, A: 255})
 	})
 	startSyncButton.Disable()
 
@@ -244,9 +285,9 @@ func main() {
 	})
 	soundSwitchButton.Disable()
 
-	libraryButton = widget.NewButton("Select Engine Library", func() {
+	libraryButton = widget.NewButton("Select Engine Library Backup", func() {
 
-		directory, err := dialog.Directory().Title("Engine Library").Browse()
+		directory, err := dialog.Directory().Title("Engine Library Backup").Browse()
 		if err != nil {
 			fdia.NewError(err, w).Show()
 			setLoading(false)
@@ -264,6 +305,7 @@ func main() {
 			}
 
 			if len(engineDbFiles) > 1 {
+				engineLibraryDir = directory
 				libraryButton.SetText("Found " + strconv.Itoa(len(engineDbFiles)) + " DB files!")
 				setLoading(false)
 			} else {
