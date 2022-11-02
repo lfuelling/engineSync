@@ -1,6 +1,8 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -8,8 +10,12 @@ import (
 	fdia "fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	cp "github.com/otiai10/copy"
 	"github.com/sqweek/dialog"
 	"image/color"
+	_ "modernc.org/sqlite"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -25,13 +31,17 @@ var startSyncButton *widget.Button
 var statusText *canvas.Text
 var loader *widget.ProgressBarInfinite
 
+func setStatus(status string, color color.RGBA) {
+	statusText.Color = color
+	statusText.Text = status
+	statusText.Refresh()
+}
+
 func setLoading(loading bool) {
 	if loading {
 		loader.Show()
 		loader.Start()
-		statusText.Color = color.White
-		statusText.Text = "Loading..."
-		statusText.Refresh()
+		setStatus("Loading...", color.RGBA{R: 255, G: 255, B: 255, A: 255})
 		libraryButton.Disable()
 		soundSwitchButton.Disable()
 		targetDriveButton.Disable()
@@ -39,9 +49,7 @@ func setLoading(loading bool) {
 	} else {
 		loader.Stop()
 		loader.Hide()
-		statusText.Color = color.White
-		statusText.Text = "Ready!"
-		statusText.Refresh()
+		setStatus("Ready!", color.RGBA{R: 255, G: 255, B: 255, A: 255})
 
 		if !(engineDbFiles != nil && !(len(engineDbFiles) <= 0)) {
 			libraryButton.Enable()
@@ -56,6 +64,41 @@ func setLoading(loading bool) {
 			}
 		}
 	}
+}
+
+func handleTrack(rows *sql.Rows, db *sql.DB) error {
+	track := Track{}
+	err2 := rows.Scan(&track.Id, &track.Path, &track.Filename)
+	if err2 != nil {
+		return err2
+	}
+
+	// copy track to target Music folder
+	splitTrackPath := strings.Split(track.Path, "#")[0]
+	splitTrackPathSegments := strings.Split(splitTrackPath, string(filepath.Separator))
+	setStatus(fmt.Sprintf("Syncing track %v...", splitTrackPathSegments[len(splitTrackPathSegments)-1]), color.RGBA{R: 255, G: 255, B: 255, A: 255})
+
+	targetPath := fmt.Sprintf("%v%vEngine Library%vMusic", targetDevicePath, string(filepath.Separator), string(filepath.Separator))
+	err3 := os.MkdirAll(targetPath, os.ModePerm)
+	if err3 != nil {
+		return err3
+	}
+	trackPath, err4 := filepath.Abs(splitTrackPath)
+	if err4 != nil {
+		return err4
+	}
+
+	_, err5 := CopyTrack(trackPath, targetPath)
+	if err5 != nil {
+		return err5
+	}
+	split := strings.Split(track.Path, string(filepath.Separator)) //FIXME: the path seems to contain "garbage"
+	newPath := fmt.Sprintf("Music%v%v", string(filepath.Separator), split[len(split)-1])
+	_, err6 := db.Exec("UPDATE Track SET path = ? WHERE id = ?;", newPath, track.Id)
+	if err6 != nil {
+		return err6
+	}
+	return nil
 }
 
 func main() {
@@ -74,6 +117,80 @@ func main() {
 
 	startSyncButton = widget.NewButton("Start Sync!", func() {
 		setLoading(true)
+
+		if len(soundSwitchProject) > 1 && strings.HasSuffix(soundSwitchProject, ".ssproj") {
+			setStatus("Copying SoundSwitch Project", color.RGBA{R: 255, G: 255, B: 255, A: 255})
+			targetPath := fmt.Sprintf("%v%vSoundSwitch", targetDevicePath, string(filepath.Separator))
+			err := os.MkdirAll(targetPath, os.ModePerm)
+			if err != nil {
+				fdia.NewError(err, w).Show()
+				setLoading(false)
+				return
+			} else {
+				err1 := cp.Copy(soundSwitchProject, targetPath)
+				if err1 != nil {
+					fdia.NewError(err1, w).Show()
+					setLoading(false)
+					return
+				}
+			}
+		}
+
+		for _, engineDbFile := range engineDbFiles {
+			splitPath := strings.Split(engineDbFile, string(filepath.Separator))
+			setStatus(fmt.Sprintf("Copying db %v...", splitPath[len(splitPath)-1]), color.RGBA{R: 255, G: 255, B: 255, A: 255})
+
+			// copy db to target
+			targetPath := fmt.Sprintf("%v%vEngine Library%vDatabase2", targetDevicePath, string(filepath.Separator), string(filepath.Separator))
+			err := os.MkdirAll(targetPath, os.ModePerm)
+			if err != nil {
+				fdia.NewError(err, w).Show()
+				setLoading(false)
+				return
+			} else {
+				CopyFile(engineDbFile, targetPath, w)
+
+				// read tracks from database (from target)
+				dbName := splitPath[len(splitPath)-1]
+				setStatus(fmt.Sprintf("Reading tracks of %v...", dbName), color.RGBA{R: 255, G: 255, B: 255, A: 255})
+				db, err := sql.Open("sqlite", fmt.Sprintf("file:%v%v%v", targetPath, string(filepath.Separator), dbName))
+				if err != nil {
+					fdia.NewError(err, w).Show()
+					setLoading(false)
+					return
+				}
+
+				rows, err1 := db.Query("SELECT id, path, filename FROM Track;")
+				if err1 != nil {
+					fdia.NewError(err1, w).Show()
+					setLoading(false)
+					return
+				}
+
+				for rows.Next() {
+					err2 := handleTrack(rows, db)
+					if err2 != nil {
+						fdia.NewError(err2, w).Show()
+						setLoading(false)
+						return
+					}
+				}
+
+				err3 := rows.Close()
+				if err3 != nil {
+					fdia.NewError(err3, w).Show()
+					setLoading(false)
+					return
+				}
+
+				err4 := db.Close()
+				if err4 != nil {
+					fdia.NewError(err4, w).Show()
+					setLoading(false)
+					return
+				}
+			}
+		}
 	})
 	startSyncButton.Disable()
 
@@ -82,21 +199,21 @@ func main() {
 
 		targetPath, err := dialog.Directory().Title("Target Device").Browse()
 		if err != nil {
-			fdia.NewError(err, w)
+			fdia.NewError(err, w).Show()
+			setLoading(false)
+			return
 		}
 
 		if IsDirectory(targetPath, w) {
 			targetDevicePath = targetPath
 
-			splitPath := strings.Split(targetPath, "/")
+			splitPath := strings.Split(targetPath, string(filepath.Separator))
 			targetDriveButton.SetText(splitPath[len(splitPath)-1])
 
 			setLoading(false)
 		} else {
 			setLoading(false)
-			statusText.Color = color.RGBA{R: 255, G: 0, B: 0, A: 1}
-			statusText.Text = "Invalid target!"
-			statusText.Refresh()
+			setStatus("Invalid target!", color.RGBA{R: 255, G: 0, B: 0, A: 255})
 		}
 	})
 	targetDriveButton.Disable()
@@ -105,22 +222,22 @@ func main() {
 
 		soundSwitchPath, err := dialog.Directory().Title("SoundSwitch Project").Browse()
 		if err != nil {
-			fdia.NewError(err, w)
+			fdia.NewError(err, w).Show()
+			setLoading(false)
+			return
 		}
 
 		go func() {
 			setLoading(true)
 			if strings.HasSuffix(soundSwitchPath, ".ssproj") {
 				soundSwitchProject = soundSwitchPath
-				splitPath := strings.Split(soundSwitchProject, "/")
+				splitPath := strings.Split(soundSwitchProject, string(filepath.Separator))
 
 				soundSwitchButton.SetText(splitPath[len(splitPath)-1])
 				setLoading(false)
 			} else {
 				setLoading(false)
-				statusText.Color = color.RGBA{R: 255, G: 0, B: 0, A: 1}
-				statusText.Text = "Invalid SoundSwitch Project!"
-				statusText.Refresh()
+				setStatus("Invalid SoundSwitch Project!", color.RGBA{R: 255, G: 0, B: 0, A: 255})
 			}
 		}()
 
@@ -131,7 +248,9 @@ func main() {
 
 		directory, err := dialog.Directory().Title("Engine Library").Browse()
 		if err != nil {
-			fdia.NewError(err, w)
+			fdia.NewError(err, w).Show()
+			setLoading(false)
+			return
 		}
 
 		go func() {
@@ -149,9 +268,7 @@ func main() {
 				setLoading(false)
 			} else {
 				setLoading(false)
-				statusText.Color = color.RGBA{R: 255, G: 0, B: 0, A: 1}
-				statusText.Text = "Invalid EngineDJ Library!"
-				statusText.Refresh()
+				setStatus("Invalid EngineDJ Library!", color.RGBA{R: 255, G: 0, B: 0, A: 255})
 			}
 		}()
 
