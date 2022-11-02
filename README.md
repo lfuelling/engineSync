@@ -9,6 +9,8 @@ This tool simply copies the necessary files and makes adjustments to the file pa
 
 This tool is not supported by Denon/InMusic; Please read the disclaimer at the bottom of the page.
 
+![Screenshot of the tool in the state just before you start a sync](screenshot.png)
+
 ## Features
 
 - Syncs entire library to a given drive/directory
@@ -34,13 +36,14 @@ This tool is not supported by Denon/InMusic; Please read the disclaimer at the b
    - **I have bricked my drive previously with the bugged engineDJ, so my drive was freshly formatted**
    - **I have not tested this tool with an existing library on the drive**
    - **it might not work and will definitely leave duplicate files on the drive if it already contains a library**
-6. Follow the instructions in the tool window and wait for the sync to finish
+6. Open the tool using alt+open (otherwise the "Open" button will be missing in the warning by macOS)
+7. Follow the instructions in the tool window and wait for the sync to finish
    1. Select the "Engine Library Backup" folder
    2. (Optional) select the SoundSwitch project
    3. Select the target drive
    4. Click "Start Sync" and wait
-7. **Properly Eject your drive!**
-8. Insert your drive into any engineDJ player and enjoy.
+8. **Properly Eject your drive!**
+9. Insert your drive into any engineDJ player and enjoy.
 
 ## Development
 
