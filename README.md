@@ -5,7 +5,7 @@ Application to sync EngineDJ (Desktop) Library Backups to drives.
 Works (developed and tested) on macOS Ventura 🎉
 
 This tool was created because macOS Ventura changed something with EXFAT/FAT handling which in turn broke EngineDJ. 
-This tool simply copies the necessary files and makes adjustments to the file paths in the engine library, it doesn't check for a specific partition format and so is not affected by that bug.
+This tool simply copies the necessary files and makes adjustments to the file paths in the engine database file, it doesn't check for a specific partition format and so is not affected by that bug.
 
 This tool is not supported by Denon/InMusic; Please read the disclaimer at the bottom of the page.
 
