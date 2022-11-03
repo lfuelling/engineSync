@@ -1,91 +1,96 @@
-package main
+package internal
 
 import (
 	"fmt"
-	"fyne.io/fyne/v2"
-	fdia "fyne.io/fyne/v2/dialog"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-func ReadDir(path string, w fyne.Window) []string {
+func ReadDir(path string) ([]string, error) {
 	var result []string
 	file, err := os.Open(path)
 	if err != nil {
-		fdia.NewError(err, w).Show()
+		return nil, err
 	}
 	defer file.Close()
 	names, _ := file.Readdirnames(0)
 	for _, name := range names {
 		filePath := fmt.Sprintf("%v%v%v", path, string(filepath.Separator), name)
-		if IsDirectory(filePath, w) {
-			dirResult := ReadDir(filePath, w)
+		isDirectory, err := IsDirectory(filePath)
+		if err != nil {
+			return nil, err
+		}
+		if isDirectory {
+			dirResult, err1 := ReadDir(filePath)
+			if err1 != nil {
+				return nil, err1
+			}
 			result = append(result, dirResult...)
 		} else {
 			result = append(result, filePath)
 		}
 	}
-	return result
+	return result, nil
 }
 
-func IsDirectory(path string, w fyne.Window) bool {
+func IsDirectory(path string) (bool, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		fdia.NewError(err, w).Show()
+		return false, err
 	}
 	defer file.Close()
 	fileInfo, err := file.Stat()
 	if err != nil {
-		fdia.NewError(err, w).Show()
+		return false, err
 	}
 
-	return fileInfo.IsDir()
+	return fileInfo.IsDir(), nil
 }
 
-func CopyFile(src string, dstDir string, w fyne.Window) int64 {
+func CopyFile(src string, dstDir string) error {
 	fin, err := os.Open(src)
 	if err != nil {
-		fdia.NewError(err, w).Show()
+		return err
 	}
 	defer fin.Close()
 
 	splitPath := strings.Split(src, string(filepath.Separator))
 	fout, err2 := os.Create(fmt.Sprintf("%v%v%v", dstDir, string(filepath.Separator), splitPath[len(splitPath)-1]))
 	if err2 != nil {
-		fdia.NewError(err2, w).Show()
+		return err2
 	}
 	defer fout.Close()
 
-	written, err3 := io.Copy(fout, fin)
+	_, err3 := io.Copy(fout, fin)
 
 	if err3 != nil {
-		fdia.NewError(err3, w).Show()
+		return err3
 	}
 
-	return written
+	return nil
 }
 
-func CopyTrack(src string, dstDir string) (string, error) {
+func copyTrackFile(src string, dstDir string) error {
 	fin, err := os.Open(src)
 	if err != nil {
-		return "", err
+		return err
 	}
 	defer fin.Close()
 
 	splitPath := strings.Split(src, string(filepath.Separator))
 	fileName := splitPath[len(splitPath)-1]
-	fout, err2 := os.Create(fmt.Sprintf("%v%v%v", dstDir, string(filepath.Separator), fileName))
-	if err2 != nil {
-		return "", err2
+	fout, err := os.Create(fmt.Sprintf("%v%v%v", dstDir, string(filepath.Separator), fileName))
+	if err != nil {
+		return err
 	}
 	defer fout.Close()
 
-	_, err3 := io.Copy(fout, fin)
-	if err3 != nil {
-		return "", err3
+	_, err = io.Copy(fout, fin)
+	if err != nil {
+		return err
 	}
 
-	return fileName, nil
+	return nil
 }
