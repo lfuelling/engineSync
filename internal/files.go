@@ -92,29 +92,6 @@ func CopyFile(baseDir string, src string, dstDir string) error {
 	return nil
 }
 
-func copyTrackFile(src string, dstDir string) error {
-	fin, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer fin.Close()
-
-	splitPath := strings.Split(src, string(filepath.Separator))
-	fileName := splitPath[len(splitPath)-1]
-	fout, err := os.Create(fmt.Sprintf("%v%v%v", dstDir, string(filepath.Separator), fileName))
-	if err != nil {
-		return err
-	}
-	defer fout.Close()
-
-	_, err = io.Copy(fout, fin)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func FileExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if errors.Is(err, os.ErrNotExist) {

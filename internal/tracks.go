@@ -24,13 +24,43 @@ func CopyTrack(track Track, targetDevicePath string, engineLibraryDir string) er
 		return err
 	}
 
+	// get track basedir
+	trackBaseDir, err := getTrackBaseDirAbsolute(track, engineLibraryDir)
+	if err != nil {
+		return err
+	}
+
 	// copy track to target path
-	err = copyTrackFile(trackPath, targetPath)
+	err = CopyFile(trackBaseDir, trackPath, targetPath)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func getTrackBaseDirRelative(track Track) string {
+	splitBySeparator := strings.Split(track.Path, string(filepath.Separator))
+	trackDir := strings.Join(splitBySeparator[:len(splitBySeparator)-1], string(filepath.Separator))
+	splitTrackDir := strings.Split(trackDir, "..") //TODO: use constant similar to filepath.Separator, not sure if it exists
+	splitTrackDirBySeparator := strings.Split(splitTrackDir[len(splitTrackDir)-1], string(filepath.Separator))
+	var relativeBaseDirBuilder strings.Builder
+	for i, dir := range splitTrackDirBySeparator {
+		if dir != "" {
+			for j := 0; j < (i/2)+1; j++ {
+				relativeBaseDirBuilder.WriteString("..") //TODO: use constant similar to filepath.Separator, not sure if it exists
+				relativeBaseDirBuilder.WriteString(string(filepath.Separator))
+			}
+			relativeBaseDirBuilder.WriteString(dir)
+			return relativeBaseDirBuilder.String()
+		}
+	}
+
+	return ""
+}
+
+func getTrackBaseDirAbsolute(track Track, engineLibraryDir string) (string, error) {
+	return filepath.Abs(fmt.Sprintf("%v%v%v", engineLibraryDir, string(filepath.Separator), getTrackBaseDirRelative(track)))
 }
 
 func UpdateTrack(track Track, db *sql.DB) error {
@@ -40,12 +70,8 @@ func UpdateTrack(track Track, db *sql.DB) error {
 		return err
 	}
 
-	// build new track path
-	split := strings.Split(track.Path, string(filepath.Separator))
-	newPath := fmt.Sprintf("Music%v%v", string(filepath.Separator), split[len(split)-1])
-
 	// update track path in db
-	_, err1 := begin.Exec("UPDATE OR REPLACE Track SET path = ? WHERE id = ?;", newPath, track.Id)
+	_, err1 := begin.Exec("UPDATE OR REPLACE Track SET path = ? WHERE id = ?;", buildTrackDbPath(track), track.Id)
 	if err1 != nil {
 		err2 := begin.Rollback()
 		if err2 != nil {
@@ -61,6 +87,17 @@ func UpdateTrack(track Track, db *sql.DB) error {
 	}
 
 	return nil
+}
+
+func buildTrackDbPath(track Track) string {
+	split := strings.Split(track.Path, string(filepath.Separator))
+	fileName := split[len(split)-1]
+	relativeBaseDir := getTrackBaseDirRelative(track)
+	trackRelativePath := strings.Split(track.Path, fileName)[0]
+	trackSubDir := strings.Split(trackRelativePath, relativeBaseDir)[1]
+
+	newPath := fmt.Sprintf("Music%v%v", trackSubDir, fileName)
+	return newPath
 }
 
 func GetTracks(db *sql.DB) ([]Track, error) {
