@@ -5,3 +5,16 @@ type Track struct {
 	Path     string
 	Filename string
 }
+
+type SoundSwitchVersion struct {
+	Build  int
+	Hotfix int
+	Major  int
+	Minor  int
+}
+
+type SoundSwitchProject struct {
+	Id       string
+	ReadOnly bool
+	Version  SoundSwitchVersion
+}

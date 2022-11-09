@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -49,15 +50,34 @@ func IsDirectory(path string) (bool, error) {
 	return fileInfo.IsDir(), nil
 }
 
-func CopyFile(src string, dstDir string) error {
+func CopyFile(baseDir string, src string, dstDir string) error {
+	if !strings.HasPrefix(src, baseDir) {
+		return errors.New("src must start with baseDir")
+	}
+
 	fin, err := os.Open(src)
 	if err != nil {
 		return err
 	}
 	defer fin.Close()
 
-	splitPath := strings.Split(src, string(filepath.Separator))
-	fout, err2 := os.Create(fmt.Sprintf("%v%v%v", dstDir, string(filepath.Separator), splitPath[len(splitPath)-1]))
+	splitBaseDir := strings.Split(src, baseDir)
+	splitPath := strings.Split(splitBaseDir[1], string(filepath.Separator))
+	fileName := splitPath[len(splitPath)-1]
+	targetSubDir := strings.Split(splitBaseDir[1], fileName)[0]
+	var destinationPath string
+	if targetSubDir == "/" {
+		destinationPath = fmt.Sprintf("%v%v%v", dstDir, string(filepath.Separator), fileName)
+	} else {
+		destinationPathWithSubDir := fmt.Sprintf("%v%v", dstDir, targetSubDir)
+		err2 := os.MkdirAll(destinationPathWithSubDir, os.ModePerm)
+		if err2 != nil {
+			return err2
+		}
+		destinationPath = fmt.Sprintf("%v%v", destinationPathWithSubDir, fileName)
+	}
+
+	fout, err2 := os.Create(destinationPath)
 	if err2 != nil {
 		return err2
 	}
@@ -93,4 +113,12 @@ func copyTrackFile(src string, dstDir string) error {
 	}
 
 	return nil
+}
+
+func FileExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if errors.Is(err, os.ErrNotExist) {
+		return false, nil
+	}
+	return true, err
 }

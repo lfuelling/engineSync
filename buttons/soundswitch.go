@@ -1,6 +1,7 @@
 package buttons
 
 import (
+	"engineSync/internal"
 	"fyne.io/fyne/v2/widget"
 	"github.com/sqweek/dialog"
 	"image/color"
@@ -21,7 +22,8 @@ func OnSoundSwitchButtonClick(setLoading func(loading bool, infinite bool, curre
 
 	go func() {
 		setLoading(true, true, 2, 10)
-		if strings.HasSuffix(soundSwitchPath, ".ssproj") {
+
+		if internal.IsSoundSwitchProjectDir(soundSwitchPath) {
 			setSoundSwitchPath(soundSwitchPath)
 
 			splitPath := strings.Split(soundSwitchPath, string(filepath.Separator))
