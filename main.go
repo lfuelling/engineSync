@@ -18,6 +18,7 @@ var engineLibraryDir string
 var engineDbFiles []string
 var soundSwitchProject string
 var targetDevicePath string
+var ignoreNonExistentTracks bool
 
 var libraryButton *widget.Button
 var soundSwitchButton *widget.Button
@@ -48,7 +49,7 @@ func main() {
 		buttons.OnSyncButtonClick(setLoading, func(current int) {
 			progress.Value = float64(current)
 			progress.Refresh()
-		}, setStatus, soundSwitchProject, targetDevicePath, engineLibraryDir, engineDbFiles)
+		}, setStatus, soundSwitchProject, targetDevicePath, engineLibraryDir, engineDbFiles, ignoreNonExistentTracks)
 	})
 	startSyncButton.Disable()
 
@@ -74,6 +75,10 @@ func main() {
 		}, libraryButton)
 	})
 
+	ignoreNonExistentTracksCheck := widget.NewCheck("Ignore Missing Tracks", func(value bool) {
+		ignoreNonExistentTracks = value
+	})
+
 	w.SetContent(container.NewVBox(
 		layout.NewSpacer(),
 		statusText,
@@ -81,6 +86,7 @@ func main() {
 		libraryButton,
 		soundSwitchButton,
 		targetDriveButton,
+		ignoreNonExistentTracksCheck,
 		layout.NewSpacer(),
 		startSyncButton,
 		layout.NewSpacer(),

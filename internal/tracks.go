@@ -40,23 +40,16 @@ func CopyTrack(track Track, targetDevicePath string, engineLibraryDir string) er
 }
 
 func getTrackBaseDirRelative(track Track) string {
-	splitBySeparator := strings.Split(track.Path, string(filepath.Separator))
-	trackDir := strings.Join(splitBySeparator[:len(splitBySeparator)-1], string(filepath.Separator))
-	splitTrackDir := strings.Split(trackDir, "..") //TODO: use constant similar to filepath.Separator, not sure if it exists
-	splitTrackDirBySeparator := strings.Split(splitTrackDir[len(splitTrackDir)-1], string(filepath.Separator))
-	var relativeBaseDirBuilder strings.Builder
-	for i, dir := range splitTrackDirBySeparator {
-		if dir != "" {
-			for j := 0; j < (i/2)+1; j++ {
-				relativeBaseDirBuilder.WriteString("..") //TODO: use constant similar to filepath.Separator, not sure if it exists
-				relativeBaseDirBuilder.WriteString(string(filepath.Separator))
-			}
-			relativeBaseDirBuilder.WriteString(dir)
-			return relativeBaseDirBuilder.String()
+	var index int
+	split := strings.Split(track.Path, "/")
+	for i, s := range split {
+		if s != ".." {
+			index = i
+			break
 		}
 	}
-
-	return ""
+	baseDir := split[:index+1]
+	return strings.Join(baseDir, "/")
 }
 
 func getTrackBaseDirAbsolute(track Track, engineLibraryDir string) (string, error) {

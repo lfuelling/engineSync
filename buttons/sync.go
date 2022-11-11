@@ -12,7 +12,8 @@ func OnSyncButtonClick(setLoading func(loading bool, infinite bool, current int,
 	soundSwitchProject string,
 	targetDevicePath string,
 	engineLibraryDir string,
-	engineDbFiles []string) {
+	engineDbFiles []string,
+	ignoreNonExistentTracks bool) {
 	setLoading(true, true, 1, 10)
 
 	engineDataPath, soundSwitchDataPath, err := internal.CreateTargetDirectories(targetDevicePath, setLoading, setStatus)
@@ -31,11 +32,16 @@ func OnSyncButtonClick(setLoading func(loading bool, infinite bool, current int,
 		}
 	}
 
-	err2 := internal.CopyEngineDbFiles(setLoading, setProgress, setStatus, engineDbFiles, engineLibraryDir, engineDataPath, targetDevicePath)
+	err2, skippedTracks := internal.CopyEngineDbFiles(setLoading, setProgress, setStatus, engineDbFiles, engineLibraryDir, engineDataPath, targetDevicePath, ignoreNonExistentTracks)
 	if err2 != nil {
 		dialog.Message("%s", err2).Title("Error!").Error()
 		setLoading(false, true, 0, 0)
 		return
+	}
+
+	// warn if tracks were skipped
+	if len(skippedTracks) > 0 {
+		dialog.Message("Skipped %v tracks!", len(skippedTracks)).Info()
 	}
 
 	// all done
