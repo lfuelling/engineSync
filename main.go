@@ -31,7 +31,7 @@ var loader *widget.ProgressBarInfinite
 func main() {
 	a := app.New()
 	w := a.NewWindow("engineSync")
-	w.Resize(fyne.NewSize(255, 255))
+	w.Resize(fyne.NewSize(255, 264))
 	w.SetFixedSize(true)
 
 	statusText = canvas.NewText("Select Engine Library to start!", color.White)
@@ -86,7 +86,7 @@ func main() {
 		libraryButton,
 		soundSwitchButton,
 		targetDriveButton,
-		ignoreNonExistentTracksCheck,
+		container.New(layout.NewCenterLayout(), ignoreNonExistentTracksCheck),
 		layout.NewSpacer(),
 		startSyncButton,
 		layout.NewSpacer(),
