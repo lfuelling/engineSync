@@ -3,8 +3,7 @@ module engineSync
 go 1.19
 
 require (
-	fyne.io/fyne/v2 v2.2.3
-	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
+	fyne.io/fyne/v2 v2.2.4
 	github.com/sqweek/dialog v0.0.0-20220809060634-e981b270ebbf
 	modernc.org/sqlite v1.19.3
 )
