@@ -32,6 +32,10 @@ This tool is not supported by Denon/InMusic; Please read the disclaimer at the b
 2. Organize your Music using engineDJ (which runs good enough for that purpose on macOS Ventura)
 3. (OPTIONAL) Organize your light show using SoundSwitch (also still running on Ventura)
 4. Close engineDJ, let it create a **Library Backup** (this is important)
+   1. From the EnginDJ menu, select 'Preferences'
+   ![Screenshot of the tool in the state just before you start a sync](screenshot-menu.png)
+   2. From the 'Library' Tab, scroll down and select 'Backup'
+   ![Screenshot of the tool in the state just before you start a sync](screenshot-backup.png)
 5. Attach your drive, make sure it's formatted to EXFAT or FAT!
    - **I have bricked my drive previously with the bugged engineDJ, so my drive was freshly formatted**
    - **I have not tested this tool with an existing library on the drive**
