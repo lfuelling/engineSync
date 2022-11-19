@@ -65,7 +65,7 @@ func getTrackBaseDirAbsolute(track Track, engineLibraryDir string) (string, erro
 	return filepath.Abs(fmt.Sprintf("%v%v%v", engineLibraryDir, string(filepath.Separator), getTrackBaseDirRelative(track)))
 }
 
-func UpdateTrack(track Track, db *sql.DB) error {
+func UpdateTrack(track Track, db *sql.DB, keepDirectoryStructure bool) error {
 	// begin new db transaction
 	begin, err := db.Begin()
 	if err != nil {
@@ -73,7 +73,7 @@ func UpdateTrack(track Track, db *sql.DB) error {
 	}
 
 	// update track path in db
-	_, err1 := begin.Exec("UPDATE OR REPLACE Track SET path = ? WHERE id = ?;", buildTrackDbPath(track), track.Id)
+	_, err1 := begin.Exec("UPDATE OR REPLACE Track SET path = ? WHERE id = ?;", buildTrackDbPath(track, keepDirectoryStructure), track.Id)
 	if err1 != nil {
 		err2 := begin.Rollback()
 		if err2 != nil {
@@ -91,12 +91,18 @@ func UpdateTrack(track Track, db *sql.DB) error {
 	return nil
 }
 
-func buildTrackDbPath(track Track) string {
+func buildTrackDbPath(track Track, keepDirectoryStructure bool) string {
 	split := strings.Split(track.Path, string(filepath.Separator))
 	fileName := split[len(split)-1]
-	relativeBaseDir := getTrackBaseDirRelative(track)
-	trackRelativePath := strings.Split(track.Path, fileName)[0]
-	trackSubDir := strings.Split(trackRelativePath, relativeBaseDir)[1]
+
+	var trackSubDir string
+	if keepDirectoryStructure {
+		relativeBaseDir := getTrackBaseDirRelative(track)
+		trackRelativePath := strings.Split(track.Path, fileName)[0]
+		trackSubDir = strings.Split(trackRelativePath, relativeBaseDir)[1]
+	} else {
+		trackSubDir = "/"
+	}
 
 	newPath := fmt.Sprintf("Music%v%v", trackSubDir, fileName)
 	return newPath

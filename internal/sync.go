@@ -82,7 +82,7 @@ func CopyEngineDbFiles(setLoading func(loading bool, infinite bool, current int,
 				}
 
 				// Update track in target db
-				err4 := UpdateTrack(track, db)
+				err4 := UpdateTrack(track, db, keepDirectoryStructure)
 				if err4 != nil {
 					return err4, []Track{}
 				}
