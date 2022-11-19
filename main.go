@@ -19,6 +19,7 @@ var engineDbFiles []string
 var soundSwitchProject string
 var targetDevicePath string
 var ignoreNonExistentTracks bool
+var keepDirectoryStructure bool
 
 var libraryButton *widget.Button
 var soundSwitchButton *widget.Button
@@ -49,7 +50,7 @@ func main() {
 		buttons.OnSyncButtonClick(setLoading, func(current int) {
 			progress.Value = float64(current)
 			progress.Refresh()
-		}, setStatus, soundSwitchProject, targetDevicePath, engineLibraryDir, engineDbFiles, ignoreNonExistentTracks)
+		}, setStatus, soundSwitchProject, targetDevicePath, engineLibraryDir, engineDbFiles, ignoreNonExistentTracks, keepDirectoryStructure)
 	})
 	startSyncButton.Disable()
 
@@ -79,6 +80,10 @@ func main() {
 		ignoreNonExistentTracks = value
 	})
 
+	keepDirectoryStructureCheck := widget.NewCheck("Keep directory structure", func(value bool) {
+		keepDirectoryStructure = value
+	})
+
 	w.SetContent(container.NewVBox(
 		layout.NewSpacer(),
 		statusText,
@@ -87,6 +92,7 @@ func main() {
 		soundSwitchButton,
 		targetDriveButton,
 		container.New(layout.NewCenterLayout(), ignoreNonExistentTracksCheck),
+		container.New(layout.NewCenterLayout(), keepDirectoryStructureCheck),
 		layout.NewSpacer(),
 		startSyncButton,
 		layout.NewSpacer(),

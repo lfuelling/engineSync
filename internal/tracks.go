@@ -4,11 +4,12 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
 
-func CopyTrack(track Track, targetDevicePath string, engineLibraryDir string) error {
+func CopyTrack(track Track, targetDevicePath string, engineLibraryDir string, keepDirectoryStructure bool) error {
 	// build target path
 	targetPath := fmt.Sprintf("%v%vEngine Library%vMusic", targetDevicePath, string(filepath.Separator), string(filepath.Separator))
 
@@ -25,9 +26,17 @@ func CopyTrack(track Track, targetDevicePath string, engineLibraryDir string) er
 	}
 
 	// get track basedir
-	trackBaseDir, err := getTrackBaseDirAbsolute(track, engineLibraryDir)
-	if err != nil {
-		return err
+	var trackBaseDir string
+	if keepDirectoryStructure {
+		trackBaseDir, err = getTrackBaseDirAbsolute(track, engineLibraryDir)
+		if err != nil {
+			return err
+		}
+	} else {
+		trackBaseDir, err = filepath.Abs(fmt.Sprintf("%v%v%v", engineLibraryDir, string(filepath.Separator), path.Dir(track.Path)))
+		if err != nil {
+			return err
+		}
 	}
 
 	// copy track to target path

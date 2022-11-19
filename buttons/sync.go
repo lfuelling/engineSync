@@ -13,7 +13,8 @@ func OnSyncButtonClick(setLoading func(loading bool, infinite bool, current int,
 	targetDevicePath string,
 	engineLibraryDir string,
 	engineDbFiles []string,
-	ignoreNonExistentTracks bool) {
+	ignoreNonExistentTracks bool,
+	keepDirectoryStructure bool) {
 	setLoading(true, true, 1, 10)
 
 	engineDataPath, soundSwitchDataPath, err := internal.CreateTargetDirectories(targetDevicePath, setLoading, setStatus)
@@ -32,7 +33,7 @@ func OnSyncButtonClick(setLoading func(loading bool, infinite bool, current int,
 		}
 	}
 
-	err2, skippedTracks := internal.CopyEngineDbFiles(setLoading, setProgress, setStatus, engineDbFiles, engineLibraryDir, engineDataPath, targetDevicePath, ignoreNonExistentTracks)
+	err2, skippedTracks := internal.CopyEngineDbFiles(setLoading, setProgress, setStatus, engineDbFiles, engineLibraryDir, engineDataPath, targetDevicePath, ignoreNonExistentTracks, keepDirectoryStructure)
 	if err2 != nil {
 		dialog.Message("%s", err2).Title("Error!").Error()
 		setLoading(false, true, 0, 0)

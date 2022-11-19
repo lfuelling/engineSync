@@ -35,7 +35,7 @@ func CreateTargetDirectories(targetPath string,
 	return engineDataPath, soundSwitchDataPath, nil
 }
 
-func CopyEngineDbFiles(setLoading func(loading bool, infinite bool, current int, total int), setProgress func(current int), setStatus func(status string, color color.RGBA), engineDbFiles []string, engineLibraryDir string, engineDataPath string, targetDevicePath string, ignoreNonExistentTracks bool) (error, []Track) {
+func CopyEngineDbFiles(setLoading func(loading bool, infinite bool, current int, total int), setProgress func(current int), setStatus func(status string, color color.RGBA), engineDbFiles []string, engineLibraryDir string, engineDataPath string, targetDevicePath string, ignoreNonExistentTracks bool, keepDirectoryStructure bool) (error, []Track) {
 	for _, engineDbFile := range engineDbFiles {
 		splitPath := strings.Split(engineDbFile, string(filepath.Separator))
 		setStatus(fmt.Sprintf("Copying db %v...", splitPath[len(splitPath)-1]), color.RGBA{R: 255, G: 255, B: 255, A: 255})
@@ -71,7 +71,7 @@ func CopyEngineDbFiles(setLoading func(loading bool, infinite bool, current int,
 				setStatus(fmt.Sprintf("Syncing track %v/%v", idx, total), color.RGBA{R: 255, G: 255, B: 255, A: 255})
 
 				// copy tracks
-				err3 := CopyTrack(track, targetDevicePath, engineLibraryDir)
+				err3 := CopyTrack(track, targetDevicePath, engineLibraryDir, keepDirectoryStructure)
 				if err3 != nil {
 					if ignoreNonExistentTracks && errors.Is(err3, os.ErrNotExist) {
 						skippedTracks = append(skippedTracks, track)
