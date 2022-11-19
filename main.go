@@ -26,6 +26,8 @@ var soundSwitchButton *widget.Button
 var targetDriveButton *widget.Button
 var startSyncButton *widget.Button
 var statusText *canvas.Text
+var ignoreNonExistentTracksCheck *widget.Check
+var keepDirectoryStructureCheck *widget.Check
 var progress *widget.ProgressBar
 var loader *widget.ProgressBarInfinite
 
@@ -76,11 +78,11 @@ func main() {
 		}, libraryButton)
 	})
 
-	ignoreNonExistentTracksCheck := widget.NewCheck("Ignore Missing Tracks", func(value bool) {
+	ignoreNonExistentTracksCheck = widget.NewCheck("Ignore Missing Tracks", func(value bool) {
 		ignoreNonExistentTracks = value
 	})
 
-	keepDirectoryStructureCheck := widget.NewCheck("Keep directory structure", func(value bool) {
+	keepDirectoryStructureCheck = widget.NewCheck("Keep directory structure", func(value bool) {
 		keepDirectoryStructure = value
 	})
 
@@ -124,6 +126,8 @@ func setLoading(loading bool, infinite bool, current int, total int) {
 		libraryButton.Disable()
 		soundSwitchButton.Disable()
 		targetDriveButton.Disable()
+		ignoreNonExistentTracksCheck.Disable()
+		keepDirectoryStructureCheck.Disable()
 		startSyncButton.Disable()
 	} else {
 		internal.HideProgressBar(progress)
@@ -131,6 +135,8 @@ func setLoading(loading bool, infinite bool, current int, total int) {
 
 		setStatus("Ready!", color.RGBA{R: 255, G: 255, B: 255, A: 255})
 
+		ignoreNonExistentTracksCheck.Enable()
+		keepDirectoryStructureCheck.Enable()
 		if !(engineDbFiles != nil && !(len(engineDbFiles) <= 0) || len(engineLibraryDir) <= 0) {
 			libraryButton.Enable()
 		} else {
