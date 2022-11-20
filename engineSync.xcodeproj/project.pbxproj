@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		32A170568AC097E6E71737E4 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A1736CD9830A4ED040D918 /* AppState.swift */; };
-		32A175CB3ECBD1BA1A4C32AE /* ButtonArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17FECF971D36186DC9A0B /* ButtonArea.swift */; };
-		32A177D55E38CA59B7B8FAF5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17B22A5BDF95352E78622 /* ContentView.swift */; };
-		32A17B3FDBF30BC2FC1FBAC4 /* SyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A178871A28F3A0DC5E106D /* SyncButton.swift */; };
-		32A17CD7BC74174FA2450C20 /* FolderSelectorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A179C604287FF3877658A2 /* FolderSelectorButton.swift */; };
+		32A17179295C7BFBE00E9F0D /* SyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17947091478F355616BB9 /* SyncButton.swift */; };
+		32A171979823CA641AEE4D6F /* ButtonArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17648A708B89E1B17EB29 /* ButtonArea.swift */; };
+		32A17350D4551AF965F0F0DF /* FolderSelectorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17E7F4E4773129D42B6B5 /* FolderSelectorButton.swift */; };
+		32A17D971003B5019A08CC7F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A175725788C37BAD616FE0 /* ContentView.swift */; };
 		CAE79442292985D500643B97 /* engineSyncApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE79441292985D500643B97 /* engineSyncApp.swift */; };
 		CAE79446292985D600643B97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAE79445292985D600643B97 /* Assets.xcassets */; };
 		CAE79449292985D600643B97 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAE79448292985D600643B97 /* Preview Assets.xcassets */; };
@@ -39,10 +39,10 @@
 
 /* Begin PBXFileReference section */
 		32A1736CD9830A4ED040D918 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
-		32A178871A28F3A0DC5E106D /* SyncButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncButton.swift; path = Components/Buttons/SyncButton.swift; sourceTree = "<group>"; };
-		32A179C604287FF3877658A2 /* FolderSelectorButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FolderSelectorButton.swift; path = Components/Buttons/FolderSelectorButton.swift; sourceTree = "<group>"; };
-		32A17B22A5BDF95352E78622 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = Components/ContentView.swift; sourceTree = "<group>"; };
-		32A17FECF971D36186DC9A0B /* ButtonArea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ButtonArea.swift; path = Components/ButtonArea.swift; sourceTree = "<group>"; };
+		32A175725788C37BAD616FE0 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		32A17648A708B89E1B17EB29 /* ButtonArea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonArea.swift; sourceTree = "<group>"; };
+		32A17947091478F355616BB9 /* SyncButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncButton.swift; sourceTree = "<group>"; };
+		32A17E7F4E4773129D42B6B5 /* FolderSelectorButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderSelectorButton.swift; sourceTree = "<group>"; };
 		CAE7943E292985D500643B97 /* engineSync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = engineSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAE79441292985D500643B97 /* engineSyncApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = engineSyncApp.swift; sourceTree = "<group>"; };
 		CAE79445292985D600643B97 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -80,6 +80,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		32A1737665D3361DC717280F /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				32A17E7F4E4773129D42B6B5 /* FolderSelectorButton.swift */,
+				32A17947091478F355616BB9 /* SyncButton.swift */,
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
+		32A175B1EB4A157F782D5B5D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				32A1737665D3361DC717280F /* Buttons */,
+				32A17648A708B89E1B17EB29 /* ButtonArea.swift */,
+				32A175725788C37BAD616FE0 /* ContentView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		CAE79435292985D500643B97 = {
 			isa = PBXGroup;
 			children = (
@@ -107,11 +126,8 @@
 				CAE79445292985D600643B97 /* Assets.xcassets */,
 				CAE7944A292985D600643B97 /* engineSync.entitlements */,
 				CAE79447292985D600643B97 /* Preview Content */,
-				32A17FECF971D36186DC9A0B /* ButtonArea.swift */,
-				32A17B22A5BDF95352E78622 /* ContentView.swift */,
-				32A179C604287FF3877658A2 /* FolderSelectorButton.swift */,
 				32A1736CD9830A4ED040D918 /* AppState.swift */,
-				32A178871A28F3A0DC5E106D /* SyncButton.swift */,
+				32A175B1EB4A157F782D5B5D /* Components */,
 			);
 			path = engineSync;
 			sourceTree = "<group>";
@@ -272,11 +288,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CAE79442292985D500643B97 /* engineSyncApp.swift in Sources */,
-				32A175CB3ECBD1BA1A4C32AE /* ButtonArea.swift in Sources */,
-				32A177D55E38CA59B7B8FAF5 /* ContentView.swift in Sources */,
-				32A17CD7BC74174FA2450C20 /* FolderSelectorButton.swift in Sources */,
 				32A170568AC097E6E71737E4 /* AppState.swift in Sources */,
-				32A17B3FDBF30BC2FC1FBAC4 /* SyncButton.swift in Sources */,
+				32A171979823CA641AEE4D6F /* ButtonArea.swift in Sources */,
+				32A17D971003B5019A08CC7F /* ContentView.swift in Sources */,
+				32A17350D4551AF965F0F0DF /* FolderSelectorButton.swift in Sources */,
+				32A17179295C7BFBE00E9F0D /* SyncButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
