@@ -63,6 +63,10 @@ This tool is not supported by Denon/InMusic; Please read the disclaimer at the b
 
 ## Disclaimer
 
+[Icon by Liz Bravo/Openmoji CC BY-SA 4.0](https://openmoji.org/)
+
+----
+
 This software is not endorsed, supported by or in any way affiliated with DenonDJ and/or InMusic Brands. All the respective Copyrights belong to them. None of their software and/or hardware products was disassembled or in any way used against the license requirements to develop this tool.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 

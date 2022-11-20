@@ -13,11 +13,10 @@
 		32A17350D4551AF965F0F0DF /* FolderSelectorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17E7F4E4773129D42B6B5 /* FolderSelectorButton.swift */; };
 		32A17D971003B5019A08CC7F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A175725788C37BAD616FE0 /* ContentView.swift */; };
 		CAE79442292985D500643B97 /* engineSyncApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE79441292985D500643B97 /* engineSyncApp.swift */; };
-		CAE79446292985D600643B97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAE79445292985D600643B97 /* Assets.xcassets */; };
-		CAE79449292985D600643B97 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAE79448292985D600643B97 /* Preview Assets.xcassets */; };
 		CAE79454292985D600643B97 /* engineSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE79453292985D600643B97 /* engineSyncTests.swift */; };
 		CAE7945E292985D600643B97 /* engineSyncUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE7945D292985D600643B97 /* engineSyncUITests.swift */; };
 		CAE79460292985D600643B97 /* engineSyncUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE7945F292985D600643B97 /* engineSyncUITestsLaunchTests.swift */; };
+		CAE7946C2929B30B00643B97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAE79445292985D600643B97 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +45,6 @@
 		CAE7943E292985D500643B97 /* engineSync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = engineSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAE79441292985D500643B97 /* engineSyncApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = engineSyncApp.swift; sourceTree = "<group>"; };
 		CAE79445292985D600643B97 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		CAE79448292985D600643B97 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CAE7944A292985D600643B97 /* engineSync.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = engineSync.entitlements; sourceTree = "<group>"; };
 		CAE7944F292985D600643B97 /* engineSyncTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = engineSyncTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAE79453292985D600643B97 /* engineSyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = engineSyncTests.swift; sourceTree = "<group>"; };
@@ -125,19 +123,10 @@
 				CAE79441292985D500643B97 /* engineSyncApp.swift */,
 				CAE79445292985D600643B97 /* Assets.xcassets */,
 				CAE7944A292985D600643B97 /* engineSync.entitlements */,
-				CAE79447292985D600643B97 /* Preview Content */,
 				32A1736CD9830A4ED040D918 /* AppState.swift */,
 				32A175B1EB4A157F782D5B5D /* Components */,
 			);
 			path = engineSync;
-			sourceTree = "<group>";
-		};
-		CAE79447292985D600643B97 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				CAE79448292985D600643B97 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		CAE79452292985D600643B97 /* engineSyncTests */ = {
@@ -261,8 +250,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CAE79449292985D600643B97 /* Preview Assets.xcassets in Resources */,
-				CAE79446292985D600643B97 /* Assets.xcassets in Resources */,
+				CAE7946C2929B30B00643B97 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +350,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -422,6 +411,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -447,21 +437,25 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = engineSync/engineSync.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"engineSync/Preview Content\"";
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = QW822SWXUV;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "engineSync (dev)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sh.lrk.engineSync;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -474,21 +468,25 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = engineSync/engineSync.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"engineSync/Preview Content\"";
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = QW822SWXUV;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = engineSync;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sh.lrk.engineSync;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -503,6 +501,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = QW822SWXUV;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -522,6 +521,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = QW822SWXUV;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -540,6 +540,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = QW822SWXUV;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
@@ -557,6 +558,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = QW822SWXUV;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
