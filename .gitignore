@@ -3,3 +3,7 @@
 .DS_Store
 *.swp
 ./engineSync
+*.app
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
