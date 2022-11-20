@@ -11,6 +11,7 @@
 		32A17179295C7BFBE00E9F0D /* SyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17947091478F355616BB9 /* SyncButton.swift */; };
 		32A171979823CA641AEE4D6F /* ButtonArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17648A708B89E1B17EB29 /* ButtonArea.swift */; };
 		32A17350D4551AF965F0F0DF /* FolderSelectorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17E7F4E4773129D42B6B5 /* FolderSelectorButton.swift */; };
+		32A17664CA866ACB25769A1B /* SyncTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A17619025F2B8A71A1CD28 /* SyncTask.swift */; };
 		32A17D971003B5019A08CC7F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A175725788C37BAD616FE0 /* ContentView.swift */; };
 		CAE79442292985D500643B97 /* engineSyncApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE79441292985D500643B97 /* engineSyncApp.swift */; };
 		CAE79454292985D600643B97 /* engineSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE79453292985D600643B97 /* engineSyncTests.swift */; };
@@ -39,6 +40,7 @@
 /* Begin PBXFileReference section */
 		32A1736CD9830A4ED040D918 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		32A175725788C37BAD616FE0 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		32A17619025F2B8A71A1CD28 /* SyncTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncTask.swift; sourceTree = "<group>"; };
 		32A17648A708B89E1B17EB29 /* ButtonArea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonArea.swift; sourceTree = "<group>"; };
 		32A17947091478F355616BB9 /* SyncButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncButton.swift; sourceTree = "<group>"; };
 		32A17E7F4E4773129D42B6B5 /* FolderSelectorButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderSelectorButton.swift; sourceTree = "<group>"; };
@@ -78,6 +80,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		32A17222E6418AE83E790D34 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				32A17619025F2B8A71A1CD28 /* SyncTask.swift */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
 		32A1737665D3361DC717280F /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -125,6 +135,7 @@
 				CAE7944A292985D600643B97 /* engineSync.entitlements */,
 				32A1736CD9830A4ED040D918 /* AppState.swift */,
 				32A175B1EB4A157F782D5B5D /* Components */,
+				32A17222E6418AE83E790D34 /* Internal */,
 			);
 			path = engineSync;
 			sourceTree = "<group>";
@@ -281,6 +292,7 @@
 				32A17D971003B5019A08CC7F /* ContentView.swift in Sources */,
 				32A17350D4551AF965F0F0DF /* FolderSelectorButton.swift in Sources */,
 				32A17179295C7BFBE00E9F0D /* SyncButton.swift in Sources */,
+				32A17664CA866ACB25769A1B /* SyncTask.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
