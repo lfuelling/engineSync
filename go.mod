@@ -5,7 +5,7 @@ go 1.19
 require (
 	fyne.io/fyne/v2 v2.3.0
 	github.com/sqweek/dialog v0.0.0-20220809060634-e981b270ebbf
-	modernc.org/sqlite v1.20.1
+	modernc.org/sqlite v1.20.3
 )
 
 require (
